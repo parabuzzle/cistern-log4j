@@ -18,7 +18,7 @@ public class Util {
 		String data = null;
 		MessageDigest md = null;
 		byte[] md5hash = null;
-		data = "authkey" + vb + obj.getAuthkey() + bb + "agent_id" + vb + obj.getAgent_id() + bb + "logtype_id" + vb + obj.getLogtype_id() + bb + "loglevel_id" + vb + obj.getLoglevel_id() + bb + "etime" + vb + obj.getEtime() + bb + "data" + vb + obj.getData() + bb + "payload" + vb + obj.payload;
+		data = "authkey" + vb + obj.getAuthkey() + bb + "agent_id" + vb + obj.getAgent_id() + bb + "logtype_id" + vb + obj.getLogtype_id() + bb + "loglevel_id" + vb + obj.getLoglevel_id() + bb + "etime" + vb + obj.getEtime() + bb + "data" + vb + obj.getData() + bb + "payload" + vb + obj.payload + bb;
 		md = MessageDigest.getInstance("MD5");
 		md5hash = new byte[32];
 		md.update(data.getBytes("UTF-8"), 0, data.length());

@@ -1,0 +1,43 @@
+**Cistern-Log4j**
+
+Cistern-Log4j is a Log4j appender extension that will append Log4j log messages to a cistern server (http://parabuzzle.github.com/cistern).
+
+**How to Use:**
+
+Build the jar using maven.
+ $ mvn install
+ 
+ This will install the jar in your local maven repo for use in your applications.
+ 
+ Next you add cistern-log4j.jar to your container (tomcat, jboss, etc) or your application's dependencies.
+ Just put it where you put the log4j jars.
+ 
+ In your Log4j config file add an appender with the cistern class and required params:
+
+param expaination:
+* = required
+
+*serverhost - the hostname of your cistern server
+*serverport - the port your collector is listening on
+*agent_id - the agent_id you want logs to be logged under (you get this from the server after creating an agent)
+*logtype_id - the logtype_id you want logs to be logged under (you get this from the server after creating a logtype)
+*authkey - the key that corresponds to your agent_id. This is for data integrity. (you get this from the server under agent info)
+*timeout - the connect timeout when establishing a connection to the server.
+
+log4j properties example:
+
+log4j.rootLogger=DEBUG, FILE, CONSOLE, REMOTE
+log4j.appender.FILE=org.apache.log4j.FileAppender
+log4j.appender.FILE.file=/tmp/logs/log.txt
+log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+log4j.appender.FILE.layout.ConversionPattern=[%d{MMM dd HH:mm:ss}] %-5p (%F:%L) - %m%n
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+log4j.appender.CONSOLE.layout.ConversionPattern=[%d{MMM dd HH:mm:ss}] %-5p (%F:%L) - %m%n
+log4j.appender.REMOTE=org.cistern.appender.log4j.TCPAppender
+log4j.appender.REMOTE.serverhost=127.0.0.1
+log4j.appender.REMOTE.serverport=9845
+log4j.appender.REMOTE.agent_id=1
+log4j.appender.REMOTE.logtype_id=1
+log4j.appender.REMOTE.authkey=7952d3072b86a949e45232fe42ad03bc
+log4j.appender.REMOTE.timeout=100
