@@ -27,7 +27,8 @@ public class TCPAppender extends AppenderSkeleton {
 	
 	static String eq = "/000/";
 	static String newval = "/111/";
-	
+	Socket sock;
+
 	//Setup loglevels
 	String fatal = "1";
 	String error = "2";
@@ -60,6 +61,7 @@ public class TCPAppender extends AppenderSkeleton {
 		}else{
 			level = "6";
 		}
+		System.out.println(entry.getLevel());
 		event.setLoglevel_id(level);
 		//event.setEtime(Long.toString(entry.getTimeStamp()/1000));
 		
@@ -82,27 +84,52 @@ public class TCPAppender extends AppenderSkeleton {
 		
 	}
 
-	public void sendData(String data) throws UnknownHostException, IOException {
-		Socket sock = new Socket();
-		sock.bind(null);
+	public void sendData(String data) throws IOException {
 		try {
-			sock.connect(new InetSocketAddress(serverhost, serverport), timeout);
-			PrintWriter out = new PrintWriter(sock.getOutputStream(), true);		
+			PrintWriter out = null;
+			out = new PrintWriter(sock.getOutputStream(), true);		
 			out.println(data);
-		    sock.close();
+			data = null;
 		} catch (SocketTimeoutException e) {
 			System.out.println("Socket Connection Timedout");
 		}
 	}
 
 	public void close() {
-		// TODO Auto-generated method stub
+		try {
+			sock.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
 
 	public boolean requiresLayout() {
 		return false;
+	}
+	
+	public void activateOptions(){ 
+		Socket socket = new Socket();
+		int retry = 3;
+		int n = 0;
+		try {
+			socket.connect(new InetSocketAddress(serverhost, serverport), timeout);
+			this.setSock(socket);
+		} catch (SocketTimeoutException e) {
+			System.out.println("Socket Connection Timedout");
+		} catch (IOException e) {
+			try {
+				while (retry >= n){
+				Thread.currentThread();
+				Thread.sleep(100);
+				activateOptions();
+				n = n + 1;
+				}
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 	
 
@@ -152,6 +179,14 @@ public class TCPAppender extends AppenderSkeleton {
 
 	public void setTimeout(int timeout) {
 		this.timeout = timeout;
+	}
+	
+	public Socket getSock() {
+		return sock;
+	}
+
+	public void setSock(Socket sock) {
+		this.sock = sock;
 	}
 	
 }
