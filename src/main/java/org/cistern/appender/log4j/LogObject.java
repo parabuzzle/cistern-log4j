@@ -2,13 +2,13 @@ package org.cistern.appender.log4j;
 
 public class LogObject {
 	
-	String data; //Static Log Data//
-	String payload; //Dynamic Log Data//
+	String data; //Static Log Data
+	String payload; //Dynamic Log Data
 	String authkey; //Agent Authkey//
-	String logtype_id; //logtype_id for cistern server//
-	String loglevel_id; //loglevel to send//
-	String etime; //Event time//
-	String agent_id;
+	String logtype_id; //logtype_id for cistern server
+	String loglevel_id; //loglevel to send
+	String etime; //Event time
+	String agent_id; //your agent id
 	
 	/*Constuctors to set defaults*/
 	public LogObject(String data, String payload, String authkey,
@@ -48,7 +48,7 @@ public class LogObject {
 		this.authkey = "";
 	}
 
-	/*Methods*/
+	/*Getters and Setters*/
 	
 	public String getData() {
 		return data;
