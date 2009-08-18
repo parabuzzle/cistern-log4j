@@ -46,10 +46,13 @@ public class TCPAppender extends AppenderSkeleton {
 		
 		//Convert any throwable data in to a string to be sent.
 		if (entry.getThrowableStrRep() == null){
-			//TODO: loop over throwable array and generate a proper string with newlines
 			s = "";
 		} else {
-			s = entry.getThrowableStrRep()[0]; //This needs fixing...
+			String[] array = entry.getThrowableStrRep();
+			s = "";
+			for(int i=0; i < array.length; i++) {
+				s = s + array[i] + "\n";
+			}
 		}
 		
 		//Create a cistern LogObject from the log4j LoggerEvent
@@ -57,15 +60,15 @@ public class TCPAppender extends AppenderSkeleton {
 		
 		//Set the LogObject loglevel from the LoggerEvent
 		//TODO: Make better level setting
-		if (entry.getLevel() == Level.DEBUG) {
+		if (entry.getLevel() .equals(Level.DEBUG)) {
 			level = debug;
-		}else if (entry.getLevel() == Level.INFO){
+		}else if (entry.getLevel() .equals(Level.INFO)){
 			level = info;
-		}else if (entry.getLevel() == Level.WARN){
+		}else if (entry.getLevel() .equals(Level.WARN)){
 			level = warn;
-		}else if (entry.getLevel() == Level.ERROR){
+		}else if (entry.getLevel() .equals(Level.ERROR)){
 			level = error;
-		}else if (entry.getLevel() == Level.FATAL){
+		}else if (entry.getLevel() .equals(Level.FATAL)){
 			level = fatal;
 		}else{
 			level = unknown;
