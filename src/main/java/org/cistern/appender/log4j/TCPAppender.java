@@ -111,11 +111,14 @@ public class TCPAppender extends AppenderSkeleton {
 	public void sendData(String data) throws IOException {
 		//This method sends a string to Cistern Server
 		PrintWriter out = null;
-		
 		//TODO: if the socket is down, all log events need to be dropped quietly.
 		try {
-			out = new PrintWriter(sock.getOutputStream(), true);		
+			out = new PrintWriter(sock.getOutputStream(), true);
 			out.println(data);
+			BufferedReader in = new BufferedReader(new InputStreamReader( sock.getInputStream()));
+			//BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));String userInput;
+			System.out.println("echo: " + in.readLine());
+
 		} catch (SocketTimeoutException e) {
 			System.out.println("Connection to Cistern timed out, dropping event");
 		}
