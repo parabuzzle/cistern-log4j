@@ -27,7 +27,7 @@ public class TCPAppender extends AppenderSkeleton {
 	
 	static String eq = "/000/";
 	static String newval = "/111/";
-	Socket sock;
+	Socket sock = null;
 
 	//Setup loglevels
 	String fatal = "1";
@@ -97,11 +97,14 @@ public class TCPAppender extends AppenderSkeleton {
 		
 		//Do Send
 		try {
-			sendData(data);
+			if (sock == null){
+				System.out.println("Connection to Cistern is dead, dropping event");
+			}else{
+				sendData(data);
+			}
 		} catch (IOException e) {
-			//If the pipe is broken do this:
-			//TODO: Handle broken pipe gracefully.
-			e.printStackTrace();
+			System.out.println("Connection to Cistern is dead, dropping event");
+			connectCistern();
 		}
 	}
 
@@ -114,8 +117,7 @@ public class TCPAppender extends AppenderSkeleton {
 			out = new PrintWriter(sock.getOutputStream(), true);		
 			out.println(data);
 		} catch (SocketTimeoutException e) {
-			//If the socket is not respoding do this:
-			e.printStackTrace();
+			System.out.println("Connection to Cistern timed out, dropping event");
 		}
 	}
 
@@ -139,18 +141,18 @@ public class TCPAppender extends AppenderSkeleton {
 	
 	public void activateOptions(){ 
 		//Log4j calls this at startup to initialize things
-		Socket socket = new Socket();
+		connectCistern();
+	}
+	
+	protected void connectCistern() {
 		try {
+			Socket socket = new Socket();
 			socket.connect(new InetSocketAddress(serverhost, serverport), timeout);
 			this.setSock(socket);
 		} catch (SocketTimeoutException e) {
-			//do this if the socket connection times out
-			//TODO: if this fails we should try and reconnect
-			e.printStackTrace();
+			System.out.println("Connection to Cistern server timed out");
 		} catch (IOException e) {
-			//do this if the pipe is broken
-			//TODO: handle broken pipe gracefully
-			e.printStackTrace();
+			System.out.println("Cistern server connection is dead");
 		}
 	}
 	
